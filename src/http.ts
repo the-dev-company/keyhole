@@ -39,7 +39,7 @@ export class Http {
       });
       const response: HttpResponse = {
         ...res,
-        data: JSON.stringify(res.body),
+        data: await res.json(),
       };
       resolve(response);
     });

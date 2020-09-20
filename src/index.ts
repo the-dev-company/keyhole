@@ -55,6 +55,7 @@ export class KeyHole {
       {},
       { token: this.tokens.token }
     );
+    this.userInfo = null;
     return res.data;
   }
 

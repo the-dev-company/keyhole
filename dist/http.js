@@ -66,9 +66,10 @@ var Http = /** @class */ (function () {
     Http.prototype.baseRequest = function (method, endpoint, headers, body) {
         var _this = this;
         return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
-            var res, response;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var res, response, _a;
+            var _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         headers = __assign({ "Content-Type": "application/json" }, headers);
                         return [4 /*yield*/, fetch("" + this.baseUrl + endpoint, {
@@ -77,8 +78,12 @@ var Http = /** @class */ (function () {
                                 body: JSON.stringify(body),
                             })];
                     case 1:
-                        res = _a.sent();
-                        response = __assign(__assign({}, res), { data: JSON.stringify(res.body) });
+                        res = _c.sent();
+                        _a = [__assign({}, res)];
+                        _b = {};
+                        return [4 /*yield*/, res.json()];
+                    case 2:
+                        response = __assign.apply(void 0, _a.concat([(_b.data = _c.sent(), _b)]));
                         resolve(response);
                         return [2 /*return*/];
                 }

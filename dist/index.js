@@ -75,6 +75,7 @@ var KeyHole = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.http.post("/logout", {}, { token: this.tokens.token })];
                     case 1:
                         res = _a.sent();
+                        this.userInfo = null;
                         return [2 /*return*/, res.data];
                 }
             });
