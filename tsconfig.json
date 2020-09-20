@@ -4,10 +4,13 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./build",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "outDir": "dist",
+    "declaration": true,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
     "sourceMap": false
   },
-  "exclude": ["node_modules", "src/tests/*"]
+  "exclude": ["node_modules", "src/tests/*"],
+  "compileOnSave": true,
+  "include": ["src"]
 }
