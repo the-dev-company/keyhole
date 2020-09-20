@@ -69,7 +69,7 @@ var Http = /** @class */ (function () {
             var res, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch(this.baseUrl + "/" + endpoint, {
+                    case 0: return [4 /*yield*/, fetch("" + this.baseUrl + endpoint, {
                             method: method,
                             headers: headers,
                             body: JSON.stringify(body),
