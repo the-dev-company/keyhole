@@ -31,6 +31,7 @@ export class Http {
     body?: any
   ) {
     return new Promise<HttpResponse>(async (resolve) => {
+      headers = { "Content-Type": "application/json", ...headers };
       const res = await fetch(`${this.baseUrl}${endpoint}`, {
         method,
         headers,

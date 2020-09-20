@@ -69,11 +69,13 @@ var Http = /** @class */ (function () {
             var res, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, fetch("" + this.baseUrl + endpoint, {
-                            method: method,
-                            headers: headers,
-                            body: JSON.stringify(body),
-                        })];
+                    case 0:
+                        headers = __assign({ "Content-Type": "application/json" }, headers);
+                        return [4 /*yield*/, fetch("" + this.baseUrl + endpoint, {
+                                method: method,
+                                headers: headers,
+                                body: JSON.stringify(body),
+                            })];
                     case 1:
                         res = _a.sent();
                         response = __assign(__assign({}, res), { data: JSON.stringify(res.body) });
