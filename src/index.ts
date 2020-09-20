@@ -59,6 +59,7 @@ export class KeyHole {
   }
 
   public async refreshToken() {
+    if (!this.tokens) return;
     const res = await this.http.post("/token/refresh", {}, this.tokens);
     return res.data;
   }
