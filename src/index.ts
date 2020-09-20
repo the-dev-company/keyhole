@@ -35,8 +35,8 @@ export class KeyHole {
     const keyhole = new KeyHole();
     keyhole.options = options;
     keyhole.http = Http.init({ baseUrl: options.apiBaseUrl });
-
     if (options.autoSync) keyhole.startSync();
+    return keyhole;
   }
 
   public async login(credentials: Credentials) {
