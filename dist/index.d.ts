@@ -22,7 +22,7 @@ export declare class KeyHole {
     private http;
     userInfo: KeyHoleUserInfo;
     private constructor();
-    static initialize(options: KeyHoleOptions): void;
+    static initialize(options: KeyHoleOptions): KeyHole;
     login(credentials: Credentials): Promise<void>;
     logout(): Promise<any>;
     refreshToken(): Promise<any>;

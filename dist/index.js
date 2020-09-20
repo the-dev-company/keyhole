@@ -47,6 +47,7 @@ var KeyHole = /** @class */ (function () {
         keyhole.http = http_1.Http.init({ baseUrl: options.apiBaseUrl });
         if (options.autoSync)
             keyhole.startSync();
+        return keyhole;
     };
     KeyHole.prototype.login = function (credentials) {
         return __awaiter(this, void 0, void 0, function () {
