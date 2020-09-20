@@ -31,7 +31,7 @@ export class Http {
     body?: any
   ) {
     return new Promise<HttpResponse>(async (resolve) => {
-      const res = await fetch(`${this.baseUrl}/${endpoint}`, {
+      const res = await fetch(`${this.baseUrl}${endpoint}`, {
         method,
         headers,
         body: JSON.stringify(body),
