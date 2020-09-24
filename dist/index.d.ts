@@ -1,5 +1,6 @@
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 export declare type KeyHoleOptions = {
-    apiBaseUrl: string;
+    config: AxiosRequestConfig;
     autoSync?: boolean;
     syncTime?: number;
 };
@@ -23,10 +24,10 @@ export declare class KeyHole {
     userInfo: KeyHoleUserInfo;
     private constructor();
     static initialize(options: KeyHoleOptions): KeyHole;
-    login(credentials: Credentials): Promise<void>;
-    logout(): Promise<any>;
-    refreshToken(): Promise<any>;
-    register(credentials: Credentials): Promise<void>;
+    login(credentials: Credentials): Promise<AxiosResponse | AxiosError>;
+    logout(): Promise<AxiosResponse | AxiosError>;
+    refreshToken(): Promise<AxiosResponse | AxiosError>;
+    register(credentials: Credentials): Promise<AxiosResponse | AxiosError>;
     stopSync(): void;
     startSync(): void;
 }

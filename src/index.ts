@@ -1,7 +1,13 @@
-import { Http } from "./http";
+import {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
+import axios from "axios";
 
 export type KeyHoleOptions = {
-  apiBaseUrl: string;
+  config: AxiosRequestConfig;
   autoSync?: boolean;
   syncTime?: number;
 };
@@ -25,7 +31,7 @@ export class KeyHole {
   private interval: NodeJS.Timeout;
   private options: KeyHoleOptions;
   private tokens: KeyHoleTokens;
-  private http: Http;
+  private http: AxiosInstance;
 
   public userInfo: KeyHoleUserInfo;
 
@@ -34,44 +40,47 @@ export class KeyHole {
   public static initialize(options: KeyHoleOptions) {
     const keyhole = new KeyHole();
     keyhole.options = options;
-    keyhole.http = Http.init({ baseUrl: options.apiBaseUrl });
+    keyhole.http = axios.create(options.config);
     if (options.autoSync) keyhole.startSync();
     return keyhole;
   }
 
-  public async login(credentials: Credentials) {
-    const res = await this.http.post("/login", {}, credentials);
+  public async login(
+    credentials: Credentials
+  ): Promise<AxiosResponse | AxiosError> {
+    const res = await this.http.post("/login", credentials);
 
     this.tokens = {
       token: res.data.token,
       refreshToken: res.data.refreshToken,
     };
     this.userInfo = res.data.user;
+
+    return res;
   }
 
-  public async logout() {
-    const res = await this.http.post(
-      "/logout",
-      {},
-      { token: this.tokens.token }
-    );
+  public async logout(): Promise<AxiosResponse | AxiosError> {
+    const res = await this.http.post("/logout", { token: this.tokens.token });
     this.userInfo = null;
-    return res.data;
+    return res;
   }
 
-  public async refreshToken() {
-    if (!this.tokens) return;
-    const res = await this.http.post("/token/refresh", {}, this.tokens);
-    return res.data;
+  public async refreshToken(): Promise<AxiosResponse | AxiosError> {
+    if (!this.tokens) throw new Error("Not logged in yet");
+    const res = await this.http.post("/token/refresh", this.tokens);
+    return res;
   }
 
-  public async register(credentials: Credentials) {
-    const res = await this.http.post("/register", {}, credentials);
+  public async register(
+    credentials: Credentials
+  ): Promise<AxiosResponse | AxiosError> {
+    const res = await this.http.post("/register", credentials);
     this.tokens = {
       token: res.data.token,
       refreshToken: res.data.refreshToken,
     };
     this.userInfo = res.data.user;
+    return res;
   }
 
   public stopSync() {
@@ -81,6 +90,6 @@ export class KeyHole {
   public startSync() {
     this.interval = setInterval(() => {
       this.refreshToken();
-    }, this.options.syncTime ?? 3300000); // Default to every 55th minute of token refresh
+    }, this.options.syncTime ?? 300000); // Default to every 5th minute of token refresh
   }
 }

@@ -35,16 +35,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyHole = void 0;
-var http_1 = require("./http");
+var axios_1 = __importDefault(require("axios"));
 var KeyHole = /** @class */ (function () {
     function KeyHole() {
     }
     KeyHole.initialize = function (options) {
         var keyhole = new KeyHole();
         keyhole.options = options;
-        keyhole.http = http_1.Http.init({ baseUrl: options.apiBaseUrl });
+        keyhole.http = axios_1.default.create(options.config);
         if (options.autoSync)
             keyhole.startSync();
         return keyhole;
@@ -54,7 +57,7 @@ var KeyHole = /** @class */ (function () {
             var res;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.http.post("/login", {}, credentials)];
+                    case 0: return [4 /*yield*/, this.http.post("/login", credentials)];
                     case 1:
                         res = _a.sent();
                         this.tokens = {
@@ -62,7 +65,7 @@ var KeyHole = /** @class */ (function () {
                             refreshToken: res.data.refreshToken,
                         };
                         this.userInfo = res.data.user;
-                        return [2 /*return*/];
+                        return [2 /*return*/, res];
                 }
             });
         });
@@ -72,11 +75,11 @@ var KeyHole = /** @class */ (function () {
             var res;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.http.post("/logout", {}, { token: this.tokens.token })];
+                    case 0: return [4 /*yield*/, this.http.post("/logout", { token: this.tokens.token })];
                     case 1:
                         res = _a.sent();
                         this.userInfo = null;
-                        return [2 /*return*/, res.data];
+                        return [2 /*return*/, res];
                 }
             });
         });
@@ -88,11 +91,11 @@ var KeyHole = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!this.tokens)
-                            return [2 /*return*/];
-                        return [4 /*yield*/, this.http.post("/token/refresh", {}, this.tokens)];
+                            throw new Error("Not logged in yet");
+                        return [4 /*yield*/, this.http.post("/token/refresh", this.tokens)];
                     case 1:
                         res = _a.sent();
-                        return [2 /*return*/, res.data];
+                        return [2 /*return*/, res];
                 }
             });
         });
@@ -102,7 +105,7 @@ var KeyHole = /** @class */ (function () {
             var res;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.http.post("/register", {}, credentials)];
+                    case 0: return [4 /*yield*/, this.http.post("/register", credentials)];
                     case 1:
                         res = _a.sent();
                         this.tokens = {
@@ -110,7 +113,7 @@ var KeyHole = /** @class */ (function () {
                             refreshToken: res.data.refreshToken,
                         };
                         this.userInfo = res.data.user;
-                        return [2 /*return*/];
+                        return [2 /*return*/, res];
                 }
             });
         });
@@ -123,7 +126,7 @@ var KeyHole = /** @class */ (function () {
         var _a;
         this.interval = setInterval(function () {
             _this.refreshToken();
-        }, (_a = this.options.syncTime) !== null && _a !== void 0 ? _a : 3300000); // Default to every 55th minute of token refresh
+        }, (_a = this.options.syncTime) !== null && _a !== void 0 ? _a : 300000); // Default to every 5th minute of token refresh
     };
     return KeyHole;
 }());
