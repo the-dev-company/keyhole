@@ -1,4 +1,4 @@
-import { StorageType } from "./types";
+import { StorageType } from "./types/types";
 export declare class Storage {
     private static readonly base64TokenName;
     static hasToken: boolean;

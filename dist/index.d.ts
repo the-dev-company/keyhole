@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { KeyHoleOptions, KeyHoleUserInfo, Credentials } from "./types";
+import { KeyHoleOptions, KeyHoleUserInfo, Credentials } from "./types/types";
 export declare class KeyHole {
     private interval;
     private options;
