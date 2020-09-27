@@ -41,8 +41,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KeyHole = void 0;
 var axios_1 = __importDefault(require("axios"));
+var storage_1 = require("./storage");
 var KeyHole = /** @class */ (function () {
     function KeyHole() {
+        if (storage_1.Storage.hasToken) {
+            this.tokens = storage_1.Storage.getToken(this.options.storage);
+            this.refreshToken();
+        }
     }
     KeyHole.initialize = function (options) {
         var keyhole = new KeyHole();
@@ -62,8 +67,9 @@ var KeyHole = /** @class */ (function () {
                         res = _a.sent();
                         this.tokens = {
                             token: res.data.token,
-                            refreshToken: res.data.refreshToken,
+                            refreshTokenId: res.data.refreshTokenId,
                         };
+                        storage_1.Storage.setToken(this.tokens, this.options.storage);
                         this.userInfo = res.data.user;
                         return [2 /*return*/, res];
                 }
@@ -95,6 +101,11 @@ var KeyHole = /** @class */ (function () {
                         return [4 /*yield*/, this.http.post("/token/refresh", this.tokens)];
                     case 1:
                         res = _a.sent();
+                        this.tokens = {
+                            token: res.data.token,
+                            refreshTokenId: res.data.refreshTokenId,
+                        };
+                        storage_1.Storage.setToken(this.tokens, this.options.storage);
                         return [2 /*return*/, res];
                 }
             });
@@ -110,8 +121,9 @@ var KeyHole = /** @class */ (function () {
                         res = _a.sent();
                         this.tokens = {
                             token: res.data.token,
-                            refreshToken: res.data.refreshToken,
+                            refreshTokenId: res.data.refreshTokenId,
                         };
+                        storage_1.Storage.setToken(this.tokens, this.options.storage);
                         this.userInfo = res.data.user;
                         return [2 /*return*/, res];
                 }
@@ -126,7 +138,7 @@ var KeyHole = /** @class */ (function () {
         var _a;
         this.interval = setInterval(function () {
             _this.refreshToken();
-        }, (_a = this.options.syncTime) !== null && _a !== void 0 ? _a : 300000); // Default to every 5th minute of token refresh
+        }, (_a = this.options.syncTime) !== null && _a !== void 0 ? _a : 290000); // Default to every ~5th minute of token refresh
     };
     return KeyHole;
 }());

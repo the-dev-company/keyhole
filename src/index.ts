@@ -1,31 +1,12 @@
-import {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
+import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import axios from "axios";
-
-export type KeyHoleOptions = {
-  config: AxiosRequestConfig;
-  autoSync?: boolean;
-  syncTime?: number;
-};
-
-export type Credentials = {
-  email: string;
-  password: string;
-};
-
-export type KeyHoleTokens = {
-  token: string;
-  refreshToken: string;
-};
-
-export type KeyHoleUserInfo = {
-  email: string;
-  id: number;
-};
+import {
+  KeyHoleOptions,
+  KeyHoleTokens,
+  KeyHoleUserInfo,
+  Credentials,
+} from "./types";
+import { Storage } from "./storage";
 
 export class KeyHole {
   private interval: NodeJS.Timeout;
@@ -35,7 +16,12 @@ export class KeyHole {
 
   public userInfo: KeyHoleUserInfo;
 
-  private constructor() {}
+  private constructor() {
+    if (Storage.hasToken) {
+      this.tokens = Storage.getToken(this.options.storage);
+      this.refreshToken();
+    }
+  }
 
   public static initialize(options: KeyHoleOptions) {
     const keyhole = new KeyHole();
@@ -52,8 +38,11 @@ export class KeyHole {
 
     this.tokens = {
       token: res.data.token,
-      refreshToken: res.data.refreshToken,
+      refreshTokenId: res.data.refreshTokenId,
     };
+
+    Storage.setToken(this.tokens, this.options.storage);
+
     this.userInfo = res.data.user;
 
     return res;
@@ -68,6 +57,11 @@ export class KeyHole {
   public async refreshToken(): Promise<AxiosResponse | AxiosError> {
     if (!this.tokens) throw new Error("Not logged in yet");
     const res = await this.http.post("/token/refresh", this.tokens);
+    this.tokens = {
+      token: res.data.token,
+      refreshTokenId: res.data.refreshTokenId,
+    };
+    Storage.setToken(this.tokens, this.options.storage);
     return res;
   }
 
@@ -77,8 +71,9 @@ export class KeyHole {
     const res = await this.http.post("/register", credentials);
     this.tokens = {
       token: res.data.token,
-      refreshToken: res.data.refreshToken,
+      refreshTokenId: res.data.refreshTokenId,
     };
+    Storage.setToken(this.tokens, this.options.storage);
     this.userInfo = res.data.user;
     return res;
   }
@@ -90,6 +85,6 @@ export class KeyHole {
   public startSync() {
     this.interval = setInterval(() => {
       this.refreshToken();
-    }, this.options.syncTime ?? 300000); // Default to every 5th minute of token refresh
+    }, this.options.syncTime ?? 290000); // Default to every ~5th minute of token refresh
   }
 }

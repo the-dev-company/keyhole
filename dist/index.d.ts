@@ -1,21 +1,5 @@
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-export declare type KeyHoleOptions = {
-    config: AxiosRequestConfig;
-    autoSync?: boolean;
-    syncTime?: number;
-};
-export declare type Credentials = {
-    email: string;
-    password: string;
-};
-export declare type KeyHoleTokens = {
-    token: string;
-    refreshToken: string;
-};
-export declare type KeyHoleUserInfo = {
-    email: string;
-    id: number;
-};
+import { AxiosError, AxiosResponse } from "axios";
+import { KeyHoleOptions, KeyHoleUserInfo, Credentials } from "./types";
 export declare class KeyHole {
     private interval;
     private options;
