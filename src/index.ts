@@ -5,7 +5,7 @@ import {
   KeyHoleTokens,
   KeyHoleUserInfo,
   Credentials,
-} from "./types";
+} from "./types/types";
 import { Storage } from "./storage";
 
 export class KeyHole {

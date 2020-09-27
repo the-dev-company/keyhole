@@ -1,4 +1,4 @@
-import { StorageType } from "./types";
+import { StorageType } from "./types/types";
 import Cookie from "js-cookie";
 
 export class Storage {
